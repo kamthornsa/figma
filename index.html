@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figma Fast Track: คู่มือการเรียนรู้เชิงโต้ตอบ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans Thai', sans-serif; }
+        .iphone-frame {
+            width: 300px;
+            height: 600px;
+            border: 12px solid #333;
+            border-radius: 40px;
+            overflow: hidden;
+            position: relative;
+            background: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transition: all 0.5s ease;
+        }
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 25px;
+            background: #333;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            z-index: 20;
+        }
+        /* Chart Container Styles */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 300px;
+        }
+        /* Custom Scrollbar for steps */
+        .steps-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .steps-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .steps-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .steps-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Simulated UI Elements */
+        .sim-input { transition: all 0.3s ease; }
+        .sim-btn { transition: all 0.3s ease; }
+        
+        /* Component Indicator Style */
+        .component-outline {
+            border: 1px dashed #8b5cf6; /* Purple dashed line for component */
+            position: relative;
+        }
+        .component-badge {
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            width: 16px;
+            height: 16px;
+            background: #8b5cf6;
+            transform: rotate(45deg);
+        }
+    </style>
+    <!-- Updated Application Structure Plan:
+         - Expanded to 5 Phases to include Constraints, Styles, and Components.
+         - Phase 2: Now includes Constraints.
+         - Phase 3: Focuses on Auto Layout & Plugins.
+         - Phase 4 (New): Focuses on Design Systems (Styles & Components).
+         - Phase 5: Prototype.
+    -->
+</head>
+<body class="bg-stone-50 text-slate-800 h-screen flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-stone-200 shadow-sm flex-none z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">F</div>
+                <h1 class="text-xl font-bold text-slate-800">Figma Fast Track Guide <span class="text-sm font-normal text-slate-500 ml-2 hidden sm:inline">| พื้นฐานครบจบใน 3.5 ชม.</span></h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right hidden sm:block">
+                    <p class="text-xs text-slate-500 uppercase tracking-wider">ความคืบหน้า</p>
+                    <div class="w-32 h-2 bg-stone-200 rounded-full mt-1 overflow-hidden">
+                        <div id="global-progress" class="h-full bg-orange-500 w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+                <button onclick="resetProgress()" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">รีเซ็ต</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Layout -->
+    <main class="flex-1 flex flex-col lg:flex-row overflow-hidden max-w-7xl mx-auto w-full">
+        
+        <!-- Sidebar Navigation -->
+        <nav class="w-full lg:w-64 bg-white border-r border-stone-200 flex-none flex lg:flex-col overflow-x-auto lg:overflow-y-auto">
+            <div class="p-4 hidden lg:block">
+                <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Phases</h2>
+            </div>
+            <div class="flex lg:block w-full" id="nav-container">
+                <!-- Nav items generated by JS -->
+            </div>
+        </nav>
+
+        <!-- Dynamic Content Area -->
+        <section class="flex-1 flex flex-col min-w-0 bg-stone-50 relative overflow-hidden">
+            
+            <!-- Phase Content Wrapper -->
+            <div id="phase-content" class="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
+                <!-- Content injected here -->
+            </div>
+
+        </section>
+
+        <!-- Visual Simulation Panel (Right Side on Desktop) -->
+        <aside class="hidden xl:block w-96 bg-stone-100 border-l border-stone-200 flex-none p-6 overflow-y-auto">
+            <div class="sticky top-0">
+                <h3 class="text-sm font-bold text-slate-600 uppercase mb-4 text-center">Visual Preview: <span id="preview-label" class="text-indigo-600">Overview</span></h3>
+                
+                <!-- Chart Container -->
+                <div id="chart-wrapper" class="chart-container mb-8">
+                    <canvas id="timeChart"></canvas>
+                </div>
+
+                <!-- Simulation Container -->
+                <div id="simulation-wrapper" class="hidden flex flex-col items-center">
+                    <div class="iphone-frame relative flex flex-col justify-center items-center transition-all duration-500" id="sim-screen">
+                        <div class="notch"></div>
+                        <div id="sim-content" class="w-full h-full p-6 flex flex-col justify-center items-center relative">
+                            <!-- Dynamic Simulation Elements -->
+                        </div>
+                    </div>
+                    <p class="text-xs text-center text-slate-400 mt-4">ภาพจำลองผลลัพธ์ในขั้นตอนนี้</p>
+                    <div id="sim-notes" class="mt-2 text-xs text-slate-500 text-center px-4 italic"></div>
+                    
+                    <!-- Prototype Controls (Only Phase 5) -->
+                    <div id="proto-controls" class="hidden mt-4 bg-white p-3 rounded shadow-sm w-full">
+                        <p class="text-xs font-bold mb-2">ทดสอบ Prototype:</p>
+                        <button id="sim-reset-btn" class="w-full py-1 bg-stone-200 text-xs rounded hover:bg-stone-300">Restart Flow</button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- Mobile/Tablet Preview Modal Toggle -->
+    <button onclick="toggleMobilePreview()" class="xl:hidden fixed bottom-6 right-6 w-14 h-14 bg-indigo-600 text-white rounded-full shadow-lg flex items-center justify-center z-50 hover:bg-indigo-700 transition-colors" title="ดูตัวอย่าง">
+        <span class="text-2xl">👁️</span>
+    </button>
+
+    <!-- Mobile Preview Modal -->
+    <div id="mobile-preview-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-stone-100 rounded-xl w-full max-w-md h-[90vh] overflow-y-auto relative flex flex-col">
+            <button onclick="toggleMobilePreview()" class="absolute top-4 right-4 text-slate-600 hover:text-red-500 z-50 bg-white rounded-full p-1">
+                ✕
+            </button>
+            <div class="p-6 flex-1 flex flex-col items-center">
+                <h3 class="text-lg font-bold text-slate-700 mb-6">Visual Preview</h3>
+                <div id="mobile-chart-wrapper" class="chart-container w-full mb-6"></div>
+                <div id="mobile-sim-wrapper" class="flex flex-col items-center w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data ---
+        const phases = [
+            {
+                id: 'overview',
+                title: 'ภาพรวม & พื้นฐาน',
+                duration: '3 - 3.5 ชม.',
+                color: 'text-indigo-600',
+                description: 'หลักสูตรเรียน Figma แบบ Fast Track เน้นลงมือทำจริง ครอบคลุมพื้นฐานสำคัญทั้งหมด',
+                steps: [
+                    { text: 'ตั้งเป้าหมาย: สร้าง Login Screen + Design System', done: false },
+                    { text: 'เข้าใจ 5 องค์ประกอบหลัก: Structure, Auto Layout, Components, Styles, Constraints', done: false },
+                    { text: 'เตรียมพร้อมลงมือทำ', done: false }
+                ]
+            },
+            {
+                id: 'phase1',
+                title: 'Phase 1: Setup & Interface',
+                duration: '15 นาที',
+                color: 'text-blue-500',
+                description: 'เริ่มต้นสร้างพื้นที่งานและทำความรู้จักเครื่องมือพื้นฐาน',
+                steps: [
+                    { text: 'เข้าเว็บ figma.com และ Login', detail: 'ใช้งานฟรี ไม่ต้องลงโปรแกรม', done: false },
+                    { text: 'สร้าง Design File ใหม่', detail: 'กดปุ่ม + มุมขวาบน', done: false },
+                    { text: 'สร้าง Frame (F) ขนาด iPhone 15', detail: 'พื้นที่ทำงานหลัก (Canvas)', done: false },
+                    { text: 'ฝึก Navigation', detail: 'Zoom (Ctrl+Scroll), Pan (Spacebar+Drag)', done: false }
+                ]
+            },
+            {
+                id: 'phase2',
+                title: 'Phase 2: Structure & Constraints',
+                duration: '45 นาที',
+                color: 'text-teal-500',
+                description: 'วางโครงสร้าง UI และกำหนดกฎการยึดติด (Constraints)',
+                steps: [
+                    { text: 'สร้าง Text "Welcome"', detail: 'กด T พิมพ์ข้อความ', done: false },
+                    { text: 'สร้าง Input (สี่เหลี่ยม + Text)', detail: 'กด R วาดสี่เหลี่ยม, กด T พิมพ์ Label', done: false },
+                    { text: 'กำหนด Constraints ให้พื้นหลัง', detail: 'เลือกสี่เหลี่ยม -> แถบขวา Constraints -> เลือก Left & Right', done: false },
+                    { text: 'ทดลองขยาย Frame', detail: 'สี่เหลี่ยมควรยืดหดตามความกว้างหน้าจอ (นี่คือพลังของ Constraints!)', done: false },
+                    { text: 'สร้างปุ่ม Login', detail: 'สี่เหลี่ยมสีน้ำเงิน + ข้อความสีขาว', done: false }
+                ]
+            },
+            {
+                id: 'phase3',
+                title: 'Phase 3: Auto Layout & Plugins',
+                duration: '45 นาที',
+                color: 'text-emerald-500',
+                description: 'จัดระเบียบอัตโนมัติ (หัวใจของ Figma) และใช้ตัวช่วย',
+                steps: [
+                    { text: 'Auto Layout ปุ่ม Login', detail: 'เลือกสี่เหลี่ยม+ข้อความ -> กด Shift+A', done: false },
+                    { text: 'ปรับ Padding ในแถบขวา', detail: 'ลองใส่ค่า Horizontal: 16, Vertical: 12', done: false },
+                    { text: 'Auto Layout ช่อง Input', detail: 'ทำเหมือนกันกับช่อง Email และ Password', done: false },
+                    { text: 'ติดตั้ง Plugin "Iconify"', detail: 'คลิกขวา -> Plugins -> Find more -> Iconify', done: false },
+                    { text: 'ใส่ไอคอน Email, Eye', detail: 'ลากไอคอนเข้ามาใส่ใน Frame Auto Layout', done: false }
+                ]
+            },
+            {
+                id: 'phase4',
+                title: 'Phase 4: Design System (Styles & Components)',
+                duration: '45 นาที',
+                color: 'text-purple-500',
+                description: 'สร้างมาตรฐานงานออกแบบด้วย Styles และ Components (สำคัญมากสำหรับการทำงานจริง)',
+                steps: [
+                    { text: 'สร้าง Color Style', detail: 'เลือกปุ่ม -> คลิก 4 จุดที่ Fill -> กด + -> ตั้งชื่อ "Primary Blue"', done: false },
+                    { text: 'สร้าง Text Style', detail: 'เลือกข้อความหัวข้อ -> คลิก 4 จุดที่ Text -> กด + -> ตั้งชื่อ "H1 Heading"', done: false },
+                    { text: 'สร้าง Component (ปุ่ม)', detail: 'เลือกปุ่ม Login -> กดปุ่มเพชร ❖ (Create Component) ด้านบน', done: false },
+                    { text: 'สร้าง Instance', detail: 'กด Alt + ลากปุ่ม Component ออกมา (ลูก)', done: false },
+                    { text: 'ทดลองแก้ Component แม่', detail: 'เปลี่ยนสีที่ตัวแม่ ตัวลูกจะเปลี่ยนตามทันที!', done: false }
+                ]
+            },
+            {
+                id: 'phase5',
+                title: 'Phase 5: Prototype & Export',
+                duration: '30 นาที',
+                color: 'text-pink-500',
+                description: 'ทำให้กดเปลี่ยนหน้าได้จริงและส่งออกงาน',
+                steps: [
+                    { text: 'Duplicate Frame', detail: 'กด Ctrl+D ได้หน้าจอที่ 2', done: false },
+                    { text: 'ออกแบบหน้า Success', detail: 'ใช้ Styles และ Components ที่สร้างไว้', done: false },
+                    { text: 'เข้าโหมด Prototype', detail: 'กด Tab Prototype แถบขวา', done: false },
+                    { text: 'ลากเส้นเชื่อมโยง', detail: 'ลากจากปุ่ม Login ไปหาหน้า Success', done: false },
+                    { text: 'Present & Share', detail: 'กดปุ่ม Play สามเหลี่ยมมุมขวาบน', done: false }
+                ]
+            },
+            {
+                id: 'shortcuts',
+                title: 'ภาคผนวก: Shortcuts',
+                duration: 'ตลอดเวลา',
+                color: 'text-slate-500',
+                description: 'รวมคีย์ลัดสำคัญที่ช่วยให้ทำงานไวขึ้น',
+                steps: [] 
+            }
+        ];
+
+        const shortcutsData = [
+            { key: 'F', action: 'Frame (สร้างหน้าจอ)', category: 'Tools' },
+            { key: 'R', action: 'Rectangle (สี่เหลี่ยม)', category: 'Tools' },
+            { key: 'T', action: 'Text (ตัวอักษร)', category: 'Tools' },
+            { key: 'Shift + A', action: 'Auto Layout (จัดกลุ่มอัจฉริยะ)', category: 'Essential' },
+            { key: 'Ctrl + Alt + K', action: 'Create Component (สร้างคอมโพเนนต์)', category: 'System' },
+            { key: 'Ctrl + Alt + B', action: 'Detach Instance (แยกออกจากแม่)', category: 'System' },
+            { key: 'Ctrl + D', action: 'Duplicate (ทำซ้ำ)', category: 'Edit' },
+            { key: 'Alt + Drag', action: 'Copy & Create Instance', category: 'Edit' },
+            { key: 'I', action: 'Color Picker (ดูดสี)', category: 'Tools' },
+            { key: 'Shift + O', action: 'Outline Mode (ดูโครงสร้าง)', category: 'View' }
+        ];
+
+        // --- State & Initialization (Same as before) ---
+        let currentPhaseId = 'overview';
+        let progressData = JSON.parse(localStorage.getItem('figmaGuideProgress_v2')) || {}; // New key for updated version
+        let timeChart = null;
+
+        const navContainer = document.getElementById('nav-container');
+        const phaseContent = document.getElementById('phase-content');
+        const globalProgressBar = document.getElementById('global-progress');
+        const previewLabel = document.getElementById('preview-label');
+        const chartWrapper = document.getElementById('chart-wrapper');
+        const simulationWrapper = document.getElementById('simulation-wrapper');
+        const simScreen = document.getElementById('sim-screen');
+        const simContent = document.getElementById('sim-content');
+        const simNotes = document.getElementById('sim-notes');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderNav();
+            loadPhase('overview');
+            updateGlobalProgress();
+        });
+
+        // --- Core Functions (Render Nav, Content, Shortcuts - Similar logic) ---
+        function renderNav() {
+            navContainer.innerHTML = '';
+            phases.forEach(phase => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-4 py-3 border-l-4 transition-colors flex flex-col gap-1 ${currentPhaseId === phase.id ? 'border-indigo-600 bg-indigo-50' : 'border-transparent hover:bg-stone-50'}`;
+                btn.onclick = () => loadPhase(phase.id);
+                const title = document.createElement('span');
+                title.className = `font-medium text-sm ${currentPhaseId === phase.id ? 'text-indigo-700' : 'text-slate-600'}`;
+                title.innerText = phase.title;
+                const meta = document.createElement('span');
+                meta.className = 'text-xs text-slate-400';
+                meta.innerText = phase.duration;
+                btn.appendChild(title);
+                btn.appendChild(meta);
+                navContainer.appendChild(btn);
+            });
+        }
+
+        function loadPhase(id) {
+            currentPhaseId = id;
+            renderNav();
+            renderContent(id);
+            updatePreview(id);
+            updateGlobalProgress();
+            phaseContent.scrollTop = 0;
+        }
+
+        function renderContent(id) {
+            const phase = phases.find(p => p.id === id);
+            let stepsHtml = '';
+            if (id === 'shortcuts') {
+                stepsHtml = renderShortcutsTable();
+            } else if (phase.steps.length > 0) {
+                stepsHtml = `
+                    <div class="space-y-4">
+                        <div class="bg-white rounded-lg shadow-sm border border-stone-200 p-4 mb-4">
+                            <h3 class="font-bold text-slate-800 mb-2">Instructions</h3>
+                            <p class="text-sm text-slate-600">ทำตามขั้นตอนด้านล่างทีละข้อ เมื่อเสร็จแล้วให้ติ๊กถูก</p>
+                        </div>
+                        ${phase.steps.map((step, index) => {
+                            const stepId = `${id}-${index}`;
+                            const isChecked = progressData[stepId] || false;
+                            return `
+                                <div class="flex items-start gap-4 p-4 bg-white rounded-xl border border-stone-200 shadow-sm transition-all hover:shadow-md ${isChecked ? 'opacity-70 bg-stone-50' : ''}">
+                                    <div class="flex-none pt-1">
+                                        <input type="checkbox" id="${stepId}" class="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 cursor-pointer" ${isChecked ? 'checked' : ''} onchange="toggleStep('${stepId}')">
+                                    </div>
+                                    <div class="flex-1">
+                                        <label for="${stepId}" class="font-medium text-slate-800 cursor-pointer select-none ${isChecked ? 'line-through text-slate-400' : ''}">${step.text}</label>
+                                        ${step.detail ? `<p class="text-sm text-slate-500 mt-1">${step.detail}</p>` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            } else {
+                stepsHtml = `<div class="p-4 bg-blue-50 text-blue-800 rounded-lg">ดูภาพรวมที่กราฟด้านขวา</div>`;
+            }
+            phaseContent.innerHTML = `
+                <div class="max-w-3xl mx-auto fade-in">
+                    <div class="mb-6">
+                        <span class="inline-block px-2 py-1 bg-stone-200 text-stone-600 text-xs font-bold rounded uppercase mb-2">${phase.duration}</span>
+                        <h2 class="text-3xl font-bold ${phase.color} mb-2">${phase.title}</h2>
+                        <p class="text-slate-600 text-lg">${phase.description}</p>
+                        ${id === 'overview' ? `
+                            <div class="mt-6 pt-4 border-t border-stone-200">
+                                <a href="https://www.figma.com" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-stone-800 transition-colors mb-4">
+                                    <span>ใช้งาน Figma.com</span>
+                                    <span class="text-xs">↗</span>
+                                </a>
+                                <p class="text-sm text-slate-500 font-medium">Credit by Gemini & Kamthorn Sarawan</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                    ${stepsHtml}
+                </div>
+            `;
+        }
+
+        function renderShortcutsTable() {
+            return `
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+                    <div class="p-4 bg-stone-50 border-b border-stone-200">
+                        <input type="text" placeholder="ค้นหาคีย์ลัด..." class="w-full px-4 py-2 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" onkeyup="filterShortcuts(this.value)">
+                    </div>
+                    <table class="w-full text-left">
+                        <thead class="bg-stone-50 text-xs text-slate-500 uppercase">
+                            <tr><th class="px-6 py-3 font-bold">Key</th><th class="px-6 py-3 font-bold">Action</th><th class="px-6 py-3 font-bold">Category</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-200">
+                            ${shortcutsData.map(s => `<tr class="hover:bg-indigo-50 transition-colors shortcut-row"><td class="px-6 py-4 font-mono font-bold text-indigo-600 bg-stone-50/50">${s.key}</td><td class="px-6 py-4 text-slate-700">${s.action}</td><td class="px-6 py-4 text-xs"><span class="px-2 py-1 rounded-full bg-slate-200 text-slate-600">${s.category}</span></td></tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function toggleStep(stepId) {
+            progressData[stepId] = !progressData[stepId];
+            localStorage.setItem('figmaGuideProgress_v2', JSON.stringify(progressData));
+            loadPhase(currentPhaseId); // Lazy re-render to update strikethrough logic properly
+        }
+
+        function updateGlobalProgress() {
+            let totalSteps = 0, completedSteps = 0;
+            phases.forEach(p => {
+                if(p.id !== 'shortcuts' && p.id !== 'overview') {
+                    p.steps.forEach((s, idx) => {
+                        totalSteps++;
+                        if (progressData[`${p.id}-${idx}`]) completedSteps++;
+                    });
+                }
+            });
+            globalProgressBar.style.width = totalSteps === 0 ? '0%' : `${(completedSteps / totalSteps) * 100}%`;
+        }
+
+        function filterShortcuts(query) {
+            const rows = document.querySelectorAll('.shortcut-row');
+            rows.forEach(row => row.style.display = row.innerText.toLowerCase().includes(query.toLowerCase()) ? '' : 'none');
+        }
+
+        // --- Visual Simulation Logic (Updated) ---
+        function updatePreview(id) {
+            previewLabel.innerText = phases.find(p => p.id === id).title;
+            simNotes.innerText = "";
+            
+            if (id === 'overview') {
+                chartWrapper.classList.remove('hidden');
+                simulationWrapper.classList.add('hidden');
+                renderTimeChart();
+            } else if (id === 'shortcuts') {
+                 chartWrapper.classList.add('hidden');
+                 simulationWrapper.classList.add('hidden');
+            } else {
+                chartWrapper.classList.add('hidden');
+                simulationWrapper.classList.remove('hidden');
+                renderSimulation(id);
+            }
+        }
+
+        function renderTimeChart() {
+            const ctx = document.getElementById('timeChart').getContext('2d');
+            if (timeChart) timeChart.destroy();
+            timeChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Phase 1: Setup', 'Phase 2: Structure', 'Phase 3: Auto Layout', 'Phase 4: Systems', 'Phase 5: Prototype'],
+                    datasets: [{
+                        data: [15, 45, 45, 45, 30],
+                        backgroundColor: ['#3b82f6', '#14b8a6', '#10b981', '#a855f7', '#ec4899'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10 } } }
+                }
+            });
+        }
+
+        function renderSimulation(phaseId) {
+            const controls = document.getElementById('proto-controls');
+            controls.classList.add('hidden');
+            simScreen.style.background = '#fff';
+            simContent.innerHTML = '';
+            simContent.className = 'w-full h-full p-6 flex flex-col items-center relative';
+
+            if (phaseId === 'phase1') {
+                simContent.innerHTML = `<div class="text-stone-300 text-4xl font-bold opacity-20">iPhone Frame</div>`;
+                simNotes.innerText = "พื้นที่ว่าง (Canvas) ที่สร้างขึ้น";
+            }
+            
+            if (phaseId === 'phase2') { // Structure & Constraints
+                simContent.innerHTML = `
+                    <div class="w-full flex flex-col items-center gap-4 mt-20 fade-in">
+                        <div class="text-2xl font-bold text-black mb-4 border border-blue-300 border-dashed p-1">Welcome Back</div>
+                        <div class="w-full h-12 bg-stone-100 border border-stone-300 flex items-center px-3 text-stone-400 text-sm relative group">
+                            Email Address
+                            <div class="hidden group-hover:block absolute -right-4 top-0 bottom-0 border-r-2 border-blue-500"></div>
+                            <div class="hidden group-hover:block absolute -left-4 top-0 bottom-0 border-l-2 border-blue-500"></div>
+                        </div>
+                        <div class="w-full h-12 bg-stone-100 border border-stone-300 flex items-center px-3 text-stone-400 text-sm">Password</div>
+                        <div class="w-full h-12 bg-blue-600 flex items-center justify-center text-white font-bold">Log In</div>
+                    </div>
+                `;
+                simNotes.innerText = "ลองจินตนาการว่าเส้นสีฟ้าคือ Constraints ที่ยึดวัตถุไว้กับขอบ";
+            }
+
+            if (phaseId === 'phase3') { // Auto Layout & Plugins
+                simContent.innerHTML = `
+                    <div class="w-full flex flex-col items-center gap-4 mt-16 fade-in">
+                        <div class="text-2xl font-bold text-slate-800 mb-2">Welcome Back</div>
+                        <div class="w-full flex flex-col gap-3">
+                            <div class="w-full p-3 bg-stone-50 rounded-xl border border-stone-200 flex items-center gap-3 ring-2 ring-transparent hover:ring-indigo-200 transition-all">
+                                <span class="text-stone-400">📧</span>
+                                <span class="text-sm text-stone-400">user@example.com</span>
+                            </div>
+                            <div class="w-full p-3 bg-stone-50 rounded-xl border border-stone-200 flex items-center gap-3 justify-between">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-stone-400">🔒</span>
+                                    <span class="text-sm text-stone-400">••••••••</span>
+                                </div>
+                                <span class="text-stone-400 text-xs">👁️</span>
+                            </div>
+                        </div>
+                        <div class="w-full mt-4">
+                            <button class="w-full py-3 bg-blue-600 text-white font-bold rounded-xl flex items-center justify-center gap-2">
+                                <span>Log In</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                simNotes.innerText = "สังเกตการจัดวางที่เป็นระเบียบด้วย Auto Layout และมีไอคอนจาก Plugin";
+            }
+
+            if (phaseId === 'phase4') { // Systems (Styles & Components)
+                simContent.innerHTML = `
+                    <div class="w-full flex flex-col items-center gap-4 mt-16 fade-in">
+                        <div class="text-2xl font-bold text-slate-800 mb-2">Welcome Back</div>
+                        <div class="w-full flex flex-col gap-3">
+                            <div class="w-full p-3 bg-stone-50 rounded-xl border border-stone-200 flex items-center gap-3"><span class="text-stone-400">📧</span><span class="text-sm text-stone-400">user@example.com</span></div>
+                            <div class="w-full p-3 bg-stone-50 rounded-xl border border-stone-200 flex items-center gap-3 justify-between"><div class="flex items-center gap-3"><span class="text-stone-400">🔒</span><span class="text-sm text-stone-400">••••••••</span></div></div>
+                        </div>
+                        <div class="w-full mt-4 p-1 component-outline rounded-xl">
+                            <div class="component-badge"></div>
+                            <button class="w-full py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-colors">
+                                Log In
+                            </button>
+                        </div>
+                        <div class="mt-4 flex gap-2">
+                             <div class="w-6 h-6 rounded-full bg-blue-600 border border-stone-200" title="Color Style: Primary"></div>
+                             <div class="w-6 h-6 rounded-full bg-stone-800 border border-stone-200" title="Color Style: Text Main"></div>
+                             <div class="w-6 h-6 rounded-full bg-stone-100 border border-stone-200" title="Color Style: Surface"></div>
+                        </div>
+                    </div>
+                `;
+                simNotes.innerText = "กรอบประสีม่วงแสดงถึง Component และวงกลมด้านล่างคือ Color Styles";
+            }
+
+            if (phaseId === 'phase5') { // Prototype
+                controls.classList.remove('hidden');
+                const loginStateHTML = `
+                    <div id="screen-login" class="w-full flex flex-col items-center gap-4 mt-16 fade-in h-full">
+                        <div class="w-16 h-16 rounded-full bg-stone-200 mb-4 overflow-hidden border-2 border-white shadow-md flex items-center justify-center text-2xl">👤</div>
+                        <div class="text-2xl font-bold text-slate-800 mb-2">Welcome Back</div>
+                        <div class="w-full flex flex-col gap-3">
+                            <div class="w-full p-3 bg-stone-50 rounded-xl border border-stone-200 flex items-center gap-3"><span class="text-stone-400">📧</span><span class="text-sm text-stone-400">user@example.com</span></div>
+                            <div class="w-full p-3 bg-stone-50 rounded-xl border border-stone-200 flex items-center gap-3 justify-between"><div class="flex items-center gap-3"><span class="text-stone-400">🔒</span><span class="text-sm text-stone-400">••••••••</span></div></div>
+                        </div>
+                        <div class="w-full mt-4">
+                            <button onclick="triggerSuccess()" class="w-full py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg active:scale-95 transition-transform">Log In</button>
+                        </div>
+                    </div>`;
+                const successStateHTML = `
+                    <div id="screen-success" class="hidden w-full h-full flex flex-col items-center justify-center text-center fade-in">
+                         <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4 text-green-500 text-4xl shadow-sm">✓</div>
+                         <h2 class="text-2xl font-bold text-slate-800">Success!</h2>
+                         <p class="text-stone-500 text-sm mt-2">You have successfully logged in.</p>
+                    </div>`;
+                simContent.innerHTML = loginStateHTML + successStateHTML;
+                document.getElementById('sim-reset-btn').onclick = () => renderSimulation('phase5');
+                simNotes.innerText = "กดปุ่ม Log In เพื่อทดสอบ Interaction ที่สร้างขึ้น";
+            }
+        }
+
+        window.triggerSuccess = function() {
+            document.getElementById('screen-login').classList.add('hidden');
+            document.getElementById('screen-success').classList.remove('hidden');
+        };
+
+        // Mobile Preview (Simplified Re-render)
+        function toggleMobilePreview() {
+            const modal = document.getElementById('mobile-preview-modal');
+            const chartW = document.getElementById('chart-wrapper');
+            const mobileChartW = document.getElementById('mobile-chart-wrapper');
+            const mobileSimW = document.getElementById('mobile-sim-wrapper');
+
+            if (modal.classList.contains('hidden')) {
+                if (!chartW.classList.contains('hidden')) {
+                    mobileChartW.appendChild(document.getElementById('timeChart'));
+                } else {
+                    const contentClone = simScreen.cloneNode(true);
+                    // Rebind Basic Click for Phase 5 in clone
+                    if(currentPhaseId === 'phase5') {
+                        const btn = contentClone.querySelector('button');
+                        if(btn) btn.onclick = () => {
+                             contentClone.querySelector('#screen-login').classList.add('hidden');
+                             contentClone.querySelector('#screen-success').classList.remove('hidden');
+                        };
+                    }
+                    mobileSimW.innerHTML = '';
+                    mobileSimW.appendChild(contentClone);
+                }
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                 if (!mobileChartW.innerHTML === '') {
+                    chartWrapper.appendChild(document.getElementById('timeChart'));
+                }
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                loadPhase(currentPhaseId); // Force Reset view to fix any DOM movement issues
+            }
+        }
+    </script>
+</body>
+</html>
